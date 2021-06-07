@@ -1,0 +1,62 @@
+['BidirectionalBFS', 'TopologySort', 'Dijkstra-pq']
+BidirectionalBFS
+Input:  start, target, edges(u->v_list)
+Output:  step of start -> target, if cannot reach return -1
+q1 = {start}
+q2 = {target}
+visited = set()
+step = 0
+while q1:
+    temp = set()
+    for u in q1:
+        if u in q2:
+            return step 
+        visited.add(u)
+        for v in edges[u]:
+            if v in visited:
+                continue 
+            temp.add(v)
+    step += 1
+    q1, q2 = q2, temp 
+return -1
+
+TopologySort
+Input:  n: int, edges(list of [ui, vi]) directional graph
+Output:  list of topology sort, if cannot return []
+indegree = [0] * n
+for u, v in edges:
+    indegree[v] += 1
+q = collections.deque()
+for i in indegree:
+    if i == 0:
+        q.append(i)
+result = []
+while q:
+    u = q.popleft()
+    result.append(u)
+    for v in edges[u]:
+        indegree[v] -= 1
+        if indegree[v] == 0:
+            q.append(v)
+if len(result) == n:
+    return result 
+else:
+    return []
+
+
+Dijkstra-pq
+Input:  n: int, edges = [[u, v, w]...], source: int
+Output:  dist of every node from source
+dist = {i: float('Inf') for i in range(n)}
+dist[start] = 0
+adj = collections.defaultdict(list)
+for u, v, w in edges:
+    adj[u].append([v, w])
+pq = [[0, start]]
+while pq:
+    d, u = heapq.heappop(pq)
+    for v, w in adj[u]:
+        dist[v] = min(dist[v], d + w)
+        heapq.heappush(pq, [dist[v], v])
+return dist
+

@@ -1,0 +1,58 @@
+['BFS', 'BidirectionalBFS', 'Trie']
+BFS
+Input:  start, target, edges(u->v_list)
+Output:  step of start -> target, if cannot reach return -1
+q = collections.deque([start])
+visited = {start}
+step = 0
+while q:
+    for i in range(len(q)):
+        u = q.popleft()
+        if u == target:
+            return step
+        for v in edges[u]:
+            if v in visited:
+                continue 
+            visited.add(v)
+            q.append(v)
+    step += 1
+return -1
+
+
+BidirectionalBFS
+Input:  start, target, edges(u->v_list)
+Output:  step of start -> target, if cannot reach return -1
+q1 = {start}
+q2 = {target}
+visited = set()
+step = 0
+while q1:
+    temp = set()
+    for u in q1:
+        if u in q2:
+            return step 
+        visited.add(u)
+        for v in edges[u]:
+            if v in visited:
+                continue 
+            temp.add(v)
+    step += 1
+    q1, q2 = q2, temp 
+return -1 
+
+Trie
+Input:  words: list[str], END mark, INFO, text to check
+Output:  trie: dict, check_result: return INFO of text if text in words else should be None
+trie = {}
+for word in words:
+    curr_root = trie 
+    for c in word:
+        curr_root = curr_root.setdefault(c, {})
+    curr_root[END] = INFO 
+curr_root = trie 
+for c in text:
+    if c in curr_root:
+        curr_root = curr_root[c]
+check_result = curr_root.get(END, None)
+return trie, check_result
+
